@@ -1,5 +1,7 @@
 package com.example.backend.models;
 
+import com.sun.istack.NotNull;
+
 import javax.persistence.*;
 
 @Entity
@@ -7,8 +9,8 @@ import javax.persistence.*;
 public class County {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer countryId;
-    private Integer countyId;
+    private Integer id;
+    @Column(unique = true)
     private String name;
 
     public County() {}
@@ -16,29 +18,21 @@ public class County {
         this.name = name;
     }
 
-    public Integer getCountryId() {
-        return this.countryId;
+    public Integer getCountyId() {
+        return this.id;
     }
 
-    public Integer getCountyId() {
-        return this.countyId;
-    }
+    public void setCountyId(Integer id) { this.id = id; }
 
     public String getName() {
         return this.name;
     }
 
-    public void setCountryIdId(Integer id) { this.countryId = id; }
-
-    public void setCountyIdId(Integer id) { this.countyId = id; }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) { this.name = name; }
 
     @Override
     public String toString() {
-        return "County { country_id = " + countryId + ", county_id =  " + countyId + ", name = " + name;
+        return "County { county_id =  " + id + ", name = " + name;
     }
 
 }

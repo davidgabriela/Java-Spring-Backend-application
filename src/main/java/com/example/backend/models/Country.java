@@ -1,7 +1,6 @@
 package com.example.backend.models;
 
-import java.util.Objects;
-
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -12,7 +11,12 @@ public class Country {
     private Integer id;
     private String name;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "country_id", foreignKey = @ForeignKey(name = "fk_counties_countries_id"))
+    private List<County> counties;
+
     public Country() {}
+
     public Country(String name) {
         this.name = name;
     }
@@ -21,15 +25,15 @@ public class Country {
         return this.id;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public void setId(Integer id) { this.id = id; }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getName() { return this.name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public List<County> getCounties() { return this.counties; }
+
+    public void setCounties(List<County> counties) { this.counties = counties; }
 
     @Override
     public String toString() {

@@ -1,6 +1,8 @@
 package com.example.backend.controllers;
 
+import com.example.backend.models.County;
 import com.example.backend.repositories.CountryRepository;
+import com.example.backend.repositories.CountyRepository;
 import com.example.backend.models.Country;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,38 +14,45 @@ import java.util.List;
 public class CountryController {
 
     private final CountryRepository countryRepository;
+    private final CountyRepository countyRepository;
 
     @Autowired
-    public CountryController(CountryRepository countryRepository) {
+    public CountryController(CountryRepository countryRepository, CountyRepository countyRepository) {
         this.countryRepository = countryRepository;
+        this.countyRepository = countyRepository;
     }
 
     @GetMapping("/countries")
     public List<Country> getCountries() {
-        return countryRepository.getCountriesBy();
+        return countryRepository.findAll();
     }
 
-    @GetMapping("/country/{id}")
+    @GetMapping("/countries/{id}")
     public Country getCountryById(@PathVariable Integer id) {
         return countryRepository.getCountryById(id);
     }
 
-    @GetMapping("/country")
-    public Country getCountryByName(@RequestParam String name) {
-        return countryRepository.getCountryByName(name);
-    }
-
-    @PostMapping("/country")
+    @PostMapping("/countries")
     public Country addCountry(@RequestBody Country country) {
         return countryRepository.save(country);
     }
 
-    @DeleteMapping("/country/{id}")
+    @DeleteMapping("/countries/{id}")
     public void deleteCountryById(@PathVariable Integer id) {
         countryRepository.deleteById(id);
     }
 
-    @PutMapping("/country/{id}")
+    @PostMapping("/countries/{id}/counties")
+    public Country addCountyToCountry(@PathVariable Integer id, @RequestBody County county) {
+        Country country = countryRepository.getCountryById(id);
+        County newCounty = countyRepository.save(county);
+        List<County> counties = country.getCounties();
+        counties.add(newCounty);
+        country.setCounties(counties);
+        return countryRepository.save(country);
+    }
+
+    @PutMapping("/countries/{id}")
     public Country updateCountryName(@PathVariable Integer id, @RequestBody Country country) {
         Country oldCountry = countryRepository.getCountryById(id);
         oldCountry.setName(country.getName());
