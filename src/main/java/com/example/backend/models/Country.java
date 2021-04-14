@@ -9,6 +9,7 @@ public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Column(unique = true)
     private String name;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
@@ -17,27 +18,20 @@ public class Country {
 
     public Country() {}
 
-    public Country(String name) {
-        this.name = name;
-    }
+    public Country(String name) { this.name = name; }
 
-    public Integer getId() {
-        return this.id;
-    }
-
+    public Integer getId() { return this.id; }
     public void setId(Integer id) { this.id = id; }
 
     public String getName() { return this.name; }
-
     public void setName(String name) { this.name = name; }
 
     public List<County> getCounties() { return this.counties; }
-
     public void setCounties(List<County> counties) { this.counties = counties; }
 
     @Override
     public String toString() {
-        return "Country { id = " + id + ", name = " + name;
+        return "Country { id = " + id + ", name = " + name + " }";
     }
 
 }
