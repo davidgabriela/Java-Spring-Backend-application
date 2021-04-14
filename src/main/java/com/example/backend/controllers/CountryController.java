@@ -28,10 +28,18 @@ public class CountryController {
         return countryRepository.getCountryById(id);
     }
 
+    @GetMapping("/country")
+    public Country getCountryByName(@RequestParam String name) {
+        return countryRepository.getCountryByName(name);
+    }
+
     @PostMapping("/country")
     public Country addCountry(@RequestBody Country country) {
         return countryRepository.save(country);
     }
 
-
+    @DeleteMapping("/country/{id}")
+    public void deleteCountryById(@PathVariable Integer id) {
+        countryRepository.deleteById(id);
+    }
 }

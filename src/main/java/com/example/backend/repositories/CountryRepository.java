@@ -8,4 +8,6 @@ import java.util.List;
 public interface CountryRepository extends JpaRepository<Country, Integer> {
     List<Country> getCountriesBy();
     Country getCountryById(Integer id);
+    Country getCountryByName(String name);
+    void deleteCountryById(Integer id);
 }
