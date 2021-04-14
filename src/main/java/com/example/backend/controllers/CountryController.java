@@ -51,7 +51,6 @@ public class CountryController {
         country.setCounties(counties);
         return countryRepository.save(country);
     }
-
     @PutMapping("/countries/{id}")
     public Country updateCountryName(@PathVariable Integer id, @RequestBody Country country) {
         Country oldCountry = countryRepository.getCountryById(id);
