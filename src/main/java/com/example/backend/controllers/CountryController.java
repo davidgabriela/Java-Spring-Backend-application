@@ -42,4 +42,11 @@ public class CountryController {
     public void deleteCountryById(@PathVariable Integer id) {
         countryRepository.deleteById(id);
     }
+
+    @PutMapping("/country/{id}")
+    public Country updateCountryName(@PathVariable Integer id, @RequestBody Country country) {
+        Country oldCountry = countryRepository.getCountryById(id);
+        oldCountry.setName(country.getName());
+        return countryRepository.save(oldCountry);
+    }
 }
