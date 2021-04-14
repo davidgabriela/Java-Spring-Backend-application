@@ -1,25 +1,23 @@
-package com.example.backend;
+package com.example.backend.models;
 
 import java.util.Objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table
 public class Country {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Integer id;
     private String name;
 
     public Country() {}
-    Country(String name) {
+    public Country(String name) {
         this.name = name;
     }
 
-    public Long getId() {
+    public Integer getId() {
         return this.id;
     }
 
@@ -27,10 +25,15 @@ public class Country {
         return this.name;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public void setId(Integer id) { this.id = id; }
+
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Country { id = " + id + ", name = " + name;
+    }
+
 }
