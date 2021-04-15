@@ -37,10 +37,10 @@ public class SportController {
         Sport newSport = sportRepository.getSportById(id);
         if(sport.getName() != null)
             newSport.setName(sport.getName());
-        if(sport.getStartDate() != null)
-            newSport.setStartDate(sport.getStartDate());
-        if(sport.getEndDate() != null)
-            newSport.setEndDate(sport.getEndDate());
+        if(sport.getStartMonth() != null)
+            newSport.setStartMonth(sport.getStartMonth());
+        if(sport.getEndMonth() != null)
+            newSport.setEndMonth(sport.getEndMonth());
         if(sport.getPricePerDay() != null)
             newSport.setPricePerDay(sport.getPricePerDay());
         return sportRepository.save(newSport);

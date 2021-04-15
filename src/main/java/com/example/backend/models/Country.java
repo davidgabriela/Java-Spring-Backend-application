@@ -31,7 +31,7 @@ public class Country {
 
     @Override
     public String toString() {
-        return "Country { id = " + id + ", name = " + name + " }";
+        return "Country { name = " + name + " counties: " + counties.toString() + " }";
     }
 
 }

@@ -9,8 +9,8 @@ public class Sport {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
     private String name;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private Integer startMonth;
+    private Integer endMonth;
     private Integer pricePerDay;
 
     public Sport() {}
@@ -28,18 +28,18 @@ public class Sport {
     }
     public void setName(String name) { this.name = name; }
 
-    public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
+    public Integer getStartMonth() { return startMonth; }
+    public void setStartMonth(Integer startMonth) { this.startMonth = startMonth; }
 
-    public LocalDate getEndDate() { return endDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
+    public Integer getEndMonth() { return endMonth; }
+    public void setEndMonth(Integer endMonth) { this.endMonth = endMonth; }
 
     public Integer getPricePerDay() { return pricePerDay; }
     public void setPricePerDay(Integer pricePerDay) { this.pricePerDay = pricePerDay; }
 
     @Override
     public String toString() {
-        return "Sport { sport_id =  " + id + ", name = " + name +
-                " start_date= " + startDate + " end_date= " + endDate + " price= " + pricePerDay +  " }";
+        return "Sport { name = " + name + " start_month= " + startMonth +
+                " end_month= " + endMonth + " price= " + pricePerDay +  " }";
     }
 }

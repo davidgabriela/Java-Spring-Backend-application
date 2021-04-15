@@ -35,6 +35,6 @@ public class City {
 
     @Override
     public String toString() {
-        return "City { city_id =  " + id + ", name = " + name + " }";
+        return "City { name =  " + name + " sports = " + sports.toString() + " }";
     }
 }
