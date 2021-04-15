@@ -1,8 +1,9 @@
 package com.example.backend.controllers;
 
-import com.example.backend.models.Country;
+import com.example.backend.models.City;
 import com.example.backend.models.County;
 import com.example.backend.repositories.CountyRepository;
+import com.example.backend.repositories.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,10 +14,12 @@ import java.util.List;
 public class CountyController {
 
     private final CountyRepository countyRepository;
+    private final CityRepository cityRepository;
 
     @Autowired
-    public CountyController(CountyRepository countyRepository) {
+    public CountyController(CountyRepository countyRepository, CityRepository cityRepository) {
         this.countyRepository = countyRepository;
+        this.cityRepository = cityRepository;
     }
 
     @GetMapping("/counties")
@@ -35,8 +38,18 @@ public class CountyController {
 
     @PutMapping("/counties/{id}")
     public County updateCountyName(@PathVariable Integer id, @RequestBody County county) {
-        County oldCounty = countyRepository.getCountyById(id);
-        oldCounty.setName(county.getName());
-        return countyRepository.save(oldCounty);
+        County newCounty = countyRepository.getCountyById(id);
+        newCounty.setName(county.getName());
+        return countyRepository.save(newCounty);
+    }
+
+    @PostMapping("/counties/{id}/cities")
+    public County addCityToCounty(@PathVariable Integer id, @RequestBody City city) {
+        County county = countyRepository.getCountyById(id);
+        City newCity = cityRepository.save(city);
+        List<City> cities = county.getCities();
+        cities.add(newCity);
+        county.setCities(cities);
+        return countyRepository.save(county);
     }
 }

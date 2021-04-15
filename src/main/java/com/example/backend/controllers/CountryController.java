@@ -42,6 +42,13 @@ public class CountryController {
         countryRepository.deleteById(id);
     }
 
+    @PutMapping("/countries/{id}")
+    public Country updateCountryName(@PathVariable Integer id, @RequestBody Country country) {
+        Country newCountry = countryRepository.getCountryById(id);
+        newCountry.setName(country.getName());
+        return countryRepository.save(newCountry);
+    }
+
     @PostMapping("/countries/{id}/counties")
     public Country addCountyToCountry(@PathVariable Integer id, @RequestBody County county) {
         Country country = countryRepository.getCountryById(id);
@@ -50,11 +57,5 @@ public class CountryController {
         counties.add(newCounty);
         country.setCounties(counties);
         return countryRepository.save(country);
-    }
-    @PutMapping("/countries/{id}")
-    public Country updateCountryName(@PathVariable Integer id, @RequestBody Country country) {
-        Country oldCountry = countryRepository.getCountryById(id);
-        oldCountry.setName(country.getName());
-        return countryRepository.save(oldCountry);
     }
 }
