@@ -11,17 +11,16 @@ import com.example.backend.repositories.CountryRepository;
 import com.example.backend.repositories.SportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class VacationService {
@@ -90,32 +89,48 @@ public class VacationService {
         DateFormat monthFormat = new SimpleDateFormat("MM");
         DateFormat dayMonthFormat = new SimpleDateFormat("dd-MM");
 
-        Date vacationStartDate, vacationEndDate;
-        Date sportStartMonth, sportEndMonth;
+        Date vacationStartDate, vacationEndDate, sportStartMonth, sportEndMonth;
+        LocalDate localStartDate, localEndDate, localSportStartMonth, localSportEndMonth;
 
-        LocalDate startLocalDate, endLocalDate;
+        Long daysBetweenDates;
 
         try {
             vacationStartDate = dayMonthFormat.parse(startDate);
             vacationEndDate = dayMonthFormat.parse(endDate);
-            startLocalDate = vacationStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            endLocalDate = vacationEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            localStartDate = vacationStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            localEndDate = vacationEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            if(startLocalDate.getMonthValue() > endLocalDate.getMonthValue())
-                endLocalDate = endLocalDate.plusYears(1);
+            if(localStartDate.getMonthValue() > localEndDate.getMonthValue())
+                localEndDate = localEndDate.plusYears(1);
 
-            System.out.println(startLocalDate);
-            System.out.println(endLocalDate);
+            daysBetweenDates = ChronoUnit.DAYS.between(localStartDate, localEndDate);
 
             allSportsList = getSportsFromLocation(id);
 
             for(String sportName : sports) {
                 for(Sport s : allSportsList) {
                     if (s.getName().equals(sportName)) {
+
+                        sportStartMonth = monthFormat.parse(s.getStartMonth().toString());
+                        sportEndMonth = monthFormat.parse(s.getEndMonth().toString());
+                        localSportStartMonth = sportStartMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        localSportEndMonth = sportEndMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+                        if(localSportStartMonth.getMonthValue() > localSportEndMonth.getMonthValue()) {
+                            localSportEndMonth = localSportEndMonth.plusYears(1);
+
+                            System.out.println("start month =  " + localSportStartMonth);
+                            System.out.println("end month = " + localSportEndMonth);
+                        }
+
+
                         sportsList.add(s);
                     }
                 }
             }
+
+
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
