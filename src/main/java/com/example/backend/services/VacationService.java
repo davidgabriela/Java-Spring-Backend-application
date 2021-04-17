@@ -89,21 +89,22 @@ public class VacationService {
         DateFormat monthFormat = new SimpleDateFormat("MM");
         DateFormat dayMonthFormat = new SimpleDateFormat("dd-MM");
 
-        Date vacationStartDate, vacationEndDate, sportStartMonth, sportEndMonth;
-        LocalDate localStartDate, localEndDate, localSportStartMonth, localSportEndMonth;
+        Date vacationStart, vacationEnd, sportStartMonth, sportEndMonth;
+        LocalDate localStart, localEnd, localStartMonth, localEndMonth;
 
         Long daysBetweenDates;
+        Long vacationPrice = 0L;
 
         try {
-            vacationStartDate = dayMonthFormat.parse(startDate);
-            vacationEndDate = dayMonthFormat.parse(endDate);
-            localStartDate = vacationStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            localEndDate = vacationEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            vacationStart = dayMonthFormat.parse(startDate);
+            vacationEnd = dayMonthFormat.parse(endDate);
+            localStart = vacationStart.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            localEnd = vacationEnd.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 
-            if(localStartDate.getMonthValue() > localEndDate.getMonthValue())
-                localEndDate = localEndDate.plusYears(1);
+            if(localStart.getMonthValue() > localEnd.getMonthValue())
+                localEnd = localEnd.plusYears(1);
 
-            daysBetweenDates = ChronoUnit.DAYS.between(localStartDate, localEndDate);
+            daysBetweenDates = ChronoUnit.DAYS.between(localStart, localEnd) + 1; // including last day
 
             allSportsList = getSportsFromLocation(id);
 
@@ -113,23 +114,23 @@ public class VacationService {
 
                         sportStartMonth = monthFormat.parse(s.getStartMonth().toString());
                         sportEndMonth = monthFormat.parse(s.getEndMonth().toString());
-                        localSportStartMonth = sportStartMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                        localSportEndMonth = sportEndMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        localStartMonth = sportStartMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        localEndMonth = sportEndMonth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                        localEndMonth.plusMonths(1);
 
-                        if(localSportStartMonth.getMonthValue() > localSportEndMonth.getMonthValue()) {
-                            localSportEndMonth = localSportEndMonth.plusYears(1);
+                        if(localStartMonth.getMonthValue() > localEndMonth.getMonthValue())
+                            localEndMonth = localEndMonth.plusYears(1);
 
-                            System.out.println("start month =  " + localSportStartMonth);
-                            System.out.println("end month = " + localSportEndMonth);
+                        if((localStartMonth.isBefore(localStart) || localStartMonth.isEqual(localStart)) &&
+                                localEnd.isBefore(localEndMonth)) {
+                            sportsList.add(s);
+                            vacationPrice += s.getPricePerDay() * daysBetweenDates;
                         }
-
-
-                        sportsList.add(s);
                     }
                 }
             }
 
-
+            System.out.println(localStart.toString() + localEnd.toString() + "days to spend " + daysBetweenDates + ", total price = " + vacationPrice);
 
         } catch (ParseException e) {
             e.printStackTrace();
