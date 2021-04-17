@@ -82,11 +82,20 @@ public class VacationService {
     }
 
     public String getSports(Integer id, String startDate, String endDate, List<String> sports) {
-        List<Sport> sportList = new ArrayList<Sport>();
+        List<Sport> allSportsList = new ArrayList<Sport>();
+        List<Sport> sportsList = new ArrayList<Sport>();
 
-        sportList = getSportsFromLocation(id);
+        allSportsList = getSportsFromLocation(id);
 
-        return sportList.toString();
+        for(String sportName : sports) {
+            for(Sport s : allSportsList) {
+                if (s.getName().equals(sportName)) {
+                    sportsList.add(s);
+                }
+            }
+        }
+
+        return sportsList.toString();
     }
 }
 
