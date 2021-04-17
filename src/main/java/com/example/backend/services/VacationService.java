@@ -11,6 +11,7 @@ import com.example.backend.repositories.CountryRepository;
 import com.example.backend.repositories.SportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -18,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class VacationService {
@@ -37,41 +39,54 @@ public class VacationService {
         this.sportRepository = sportRepository;
     }
 
-    public List<Vacation> getVacationsByCountry(Integer countryId, String startDate,
-                                                String endDate, List<String> sports) {
-        Country country = countryRepository.getCountryById(countryId);
-        List<County> counties = country.getCounties();
-        List<City> cities = new ArrayList<City>();
-        List<Vacation> vacations = new ArrayList<Vacation>();
+    public List<Sport> getSportsFromLocation(Integer id) {
+        Country country = new Country();
+        County county = new County();
+        City city = new City();
 
-        Integer startDateMonthNumber = Integer.parseInt(startDate.substring(startDate.indexOf("/") + 1));
-        Integer endDateMonthNumber = Integer.parseInt(endDate.substring(endDate.indexOf("/") + 1));
+        List<County> allCounties = new ArrayList<County>();
+        List<City> allCities = new ArrayList<City>();
+        List<Sport> allSports = new ArrayList<Sport>();
 
-        try {
-            Date start = new SimpleDateFormat("dd/MM").parse(startDate);
-            Date end = new SimpleDateFormat("dd/MM").parse(endDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        for(County county : counties) {
-            cities.addAll(county.getCities());
-        }
-        for(City city : cities) {
-            Vacation newVacation;
-            List<String> vacationSports = new ArrayList<String>();
-            Integer vacationPrice = 0;
-            List<Sport> citySports = city.getSports();
-            for(Sport sport : citySports) {
-                if(sports.contains(sport.getName())){
-                    if(startDateMonthNumber >= sport.getStartMonth() &&
-                            endDateMonthNumber <= sport.getEndMonth()){
-                        vacationSports.add(sport.getName());
-                    }
-                }
+        if(countryRepository.getCountryById(id) != null) {
+            country = countryRepository.getCountryById(id);
+            allCounties.addAll(country.getCounties());
+            for(County c : allCounties) {
+                if(c != null)
+                    allCities.addAll(c.getCities());
+            }
+            for (City c : allCities) {
+                if(c != null)
+                    allSports.addAll(c.getSports());
             }
         }
-        return new ArrayList<Vacation>();
+
+        if(countyRepository.getCountyById(id) != null) {
+            county = countyRepository.getCountyById(id);
+            allCities.addAll(county.getCities());
+            for (City c : allCities) {
+                if(c != null)
+                    allSports.addAll(c.getSports());
+            }
+        }
+
+        if(cityRepository.getCityById(id) != null) {
+            city = cityRepository.getCityById(id);
+            if(city.getSports() != null)
+                allSports.addAll(city.getSports());
+            else
+                allSports = null;
+        }
+
+        return allSports;
+    }
+
+    public String getSports(Integer id, String startDate, String endDate, List<String> sports) {
+        List<Sport> sportList = new ArrayList<Sport>();
+
+        sportList = getSportsFromLocation(id);
+
+        return sportList.toString();
     }
 }
 

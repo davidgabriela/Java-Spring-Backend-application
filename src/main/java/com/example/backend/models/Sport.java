@@ -11,7 +11,7 @@ public class Sport {
     private String name;
     private Integer startMonth;
     private Integer endMonth;
-    private Integer pricePerDay;
+    private Long pricePerDay;
 
     public Sport() {}
     public Sport(String name) {
@@ -34,12 +34,12 @@ public class Sport {
     public Integer getEndMonth() { return endMonth; }
     public void setEndMonth(Integer endMonth) { this.endMonth = endMonth; }
 
-    public Integer getPricePerDay() { return pricePerDay; }
-    public void setPricePerDay(Integer pricePerDay) { this.pricePerDay = pricePerDay; }
+    public Long getPricePerDay() { return pricePerDay; }
+    public void setPricePerDay(Long pricePerDay) { this.pricePerDay = pricePerDay; }
 
     @Override
     public String toString() {
-        return "Sport { name = " + name + " start_month= " + startMonth +
-                " end_month= " + endMonth + " price= " + pricePerDay +  " }";
+        return "Sport { name = " + name + " start_month = " + startMonth +
+                " end_month = " + endMonth + " price= " + pricePerDay +  " }\n";
     }
 }

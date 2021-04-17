@@ -7,11 +7,11 @@ public class Vacation {
     private Date startDate;
     private Date endDate;
     private City city;
-    private Integer estimatedCost;
+    private Long estimatedCost;
     private List<String> sports;
 
     public Vacation() {}
-    public Vacation(Date startDate,Date endDate, City city, Integer estimatedCost, List<String> sports) {
+    public Vacation(Date startDate,Date endDate, City city, Long estimatedCost, List<String> sports) {
         this.startDate = startDate;
         this.endDate = endDate;
         this.city = city;
@@ -43,11 +43,11 @@ public class Vacation {
         this.city = city;
     }
 
-    public Integer getEstimatedCost() {
+    public Long getEstimatedCost() {
         return estimatedCost;
     }
 
-    public void setEstimatedCost(Integer estimatedCost) {
+    public void setEstimatedCost(Long estimatedCost) {
         this.estimatedCost = estimatedCost;
     }
 

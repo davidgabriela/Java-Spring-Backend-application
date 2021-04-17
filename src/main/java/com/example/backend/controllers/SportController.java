@@ -22,9 +22,15 @@ public class SportController {
     public List<Sport> getSports() {
         return sportRepository.findAll();
     }
+
     @GetMapping("/sports/{id}")
     public Sport getSportById(@PathVariable Integer id) {
         return sportRepository.getSportById(id);
+    }
+
+    @GetMapping("/sports/name/{name}")
+    public Sport getSportByName(@PathVariable String name) {
+        return sportRepository.getSportByName(name);
     }
 
     @DeleteMapping("/sports/{id}")
