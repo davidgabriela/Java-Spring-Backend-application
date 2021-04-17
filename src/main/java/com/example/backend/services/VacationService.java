@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -85,14 +87,37 @@ public class VacationService {
         List<Sport> allSportsList = new ArrayList<Sport>();
         List<Sport> sportsList = new ArrayList<Sport>();
 
-        allSportsList = getSportsFromLocation(id);
+        DateFormat monthFormat = new SimpleDateFormat("MM");
+        DateFormat dayMonthFormat = new SimpleDateFormat("dd-MM");
 
-        for(String sportName : sports) {
-            for(Sport s : allSportsList) {
-                if (s.getName().equals(sportName)) {
-                    sportsList.add(s);
+        Date vacationStartDate, vacationEndDate;
+        Date sportStartMonth, sportEndMonth;
+
+        LocalDate startLocalDate, endLocalDate;
+
+        try {
+            vacationStartDate = dayMonthFormat.parse(startDate);
+            vacationEndDate = dayMonthFormat.parse(endDate);
+            startLocalDate = vacationStartDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            endLocalDate = vacationEndDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            if(startLocalDate.getMonthValue() > endLocalDate.getMonthValue())
+                endLocalDate = endLocalDate.plusYears(1);
+
+            System.out.println(startLocalDate);
+            System.out.println(endLocalDate);
+
+            allSportsList = getSportsFromLocation(id);
+
+            for(String sportName : sports) {
+                for(Sport s : allSportsList) {
+                    if (s.getName().equals(sportName)) {
+                        sportsList.add(s);
+                    }
                 }
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         return sportsList.toString();
