@@ -16,7 +16,6 @@ public class VacationController {
 
     private final VacationService vacationService;
 
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     public VacationController(VacationService vacationService) {
         this.vacationService = vacationService;
