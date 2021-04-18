@@ -4,42 +4,22 @@ import java.util.Date;
 import java.util.List;
 
 public class Vacation {
-    private Date startDate;
-    private Date endDate;
-    private City city;
+    private String city;
     private Long estimatedCost;
     private List<String> sports;
 
     public Vacation() {}
-    public Vacation(Date startDate,Date endDate, City city, Long estimatedCost, List<String> sports) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+    public Vacation(Date startDate,Date endDate, String city, Long estimatedCost, List<String> sports) {
         this.city = city;
-        this.estimatedCost = estimatedCost;
         this.sports = sports;
+        this.estimatedCost = estimatedCost;
     }
 
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public City getCity() {
+    public String getCity() {
         return city;
     }
 
-    public void setCity(City city) {
+    public void setCity(String city) {
         this.city = city;
     }
 

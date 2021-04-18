@@ -28,11 +28,6 @@ public class SportController {
         return sportRepository.getSportById(id);
     }
 
-    @GetMapping("/sports/name/{name}")
-    public Sport getSportByName(@PathVariable String name) {
-        return sportRepository.getSportByName(name);
-    }
-
     @DeleteMapping("/sports/{id}")
     public void deleteSportById(@PathVariable Integer id) {
         sportRepository.deleteById(id);

@@ -39,7 +39,7 @@ public class Sport {
 
     @Override
     public String toString() {
-        return "Sport { name = " + name + " start_month = " + startMonth +
-                " end_month = " + endMonth + " price= " + pricePerDay +  " }\n";
+        return "Sport { name = " + name + ", start_month = " + startMonth + ", end_month = " + endMonth +
+                ", price per day = " + pricePerDay +  " }";
     }
 }

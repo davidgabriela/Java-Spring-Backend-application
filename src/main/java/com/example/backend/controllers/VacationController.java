@@ -1,10 +1,12 @@
 package com.example.backend.controllers;
 
-import com.example.backend.models.Sport;
 import com.example.backend.models.Vacation;
 import com.example.backend.services.VacationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -20,7 +22,7 @@ public class VacationController {
     }
 
     @GetMapping("/vacations/{id}/{startDate}/{endDate}/{sports}")
-    public String getVacationsByCountry(@PathVariable Integer id, @PathVariable String startDate,
+    public List<Vacation> getVacationsByCountry(@PathVariable Integer id, @PathVariable String startDate,
                                              @PathVariable String endDate, @PathVariable List<String> sports) {
         return vacationService.getSports(id, startDate, endDate, sports);
     }

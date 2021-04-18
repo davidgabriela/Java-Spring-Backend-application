@@ -1,10 +1,6 @@
 package com.example.backend.services;
 
-import com.example.backend.models.Country;
-import com.example.backend.models.County;
-import com.example.backend.models.City;
-import com.example.backend.models.Sport;
-import com.example.backend.models.Vacation;
+import com.example.backend.models.*;
 import com.example.backend.repositories.CityRepository;
 import com.example.backend.repositories.CountyRepository;
 import com.example.backend.repositories.CountryRepository;
@@ -40,14 +36,13 @@ public class VacationService {
         this.sportRepository = sportRepository;
     }
 
-    public List<Sport> getSportsFromLocation(Integer id) {
+    public List<City> getCitiesFromLocation (Integer id) {
         Country country = new Country();
         County county = new County();
         City city = new City();
 
         List<County> allCounties = new ArrayList<County>();
         List<City> allCities = new ArrayList<City>();
-        List<Sport> allSports = new ArrayList<Sport>();
 
         if(countryRepository.getCountryById(id) != null) {
             country = countryRepository.getCountryById(id);
@@ -56,35 +51,27 @@ public class VacationService {
                 if(c != null)
                     allCities.addAll(c.getCities());
             }
-            for (City c : allCities) {
-                if(c != null)
-                    allSports.addAll(c.getSports());
-            }
         }
 
         if(countyRepository.getCountyById(id) != null) {
             county = countyRepository.getCountyById(id);
-            allCities.addAll(county.getCities());
-            for (City c : allCities) {
-                if(c != null)
-                    allSports.addAll(c.getSports());
-            }
+            if(county.getCities() != null)
+                allCities.addAll(county.getCities());
         }
 
         if(cityRepository.getCityById(id) != null) {
             city = cityRepository.getCityById(id);
-            if(city.getSports() != null)
-                allSports.addAll(city.getSports());
-            else
-                allSports = null;
+            allCities.add(city);
         }
 
-        return allSports;
+        return allCities;
     }
 
-    public String getSports(Integer id, String startDate, String endDate, List<String> sports) {
-        List<Sport> allSportsList = new ArrayList<Sport>();
-        List<Sport> sportsList = new ArrayList<Sport>();
+    public List<Vacation> getSports(Integer id, String startDate, String endDate, List<String> sports) {
+        List<Sport> allSportsList;
+        List<String> sportsList;
+        List<Vacation> vacationsList = new ArrayList<Vacation>();
+        List<City> allCities;
 
         DateFormat monthFormat = new SimpleDateFormat("MM");
         DateFormat dayMonthFormat = new SimpleDateFormat("dd-MM");
@@ -93,7 +80,11 @@ public class VacationService {
         LocalDate localStart, localEnd, localStartMonth, localEndMonth;
 
         Long daysBetweenDates;
-        Long vacationPrice = 0L;
+        Long vacationPrice;
+
+        Vacation newVacation;
+
+        allCities = getCitiesFromLocation(id);
 
         try {
             vacationStart = dayMonthFormat.parse(startDate);
@@ -106,11 +97,13 @@ public class VacationService {
 
             daysBetweenDates = ChronoUnit.DAYS.between(localStart, localEnd) + 1; // including last day
 
-            allSportsList = getSportsFromLocation(id);
-
-            for(String sportName : sports) {
+            for(City c : allCities) {
+                vacationPrice = 0L;
+                newVacation = new Vacation();
+                allSportsList = c.getSports();
+                sportsList = new ArrayList<String>();
                 for(Sport s : allSportsList) {
-                    if (s.getName().equals(sportName)) {
+                    if (sports.contains(s.getName())) {
 
                         sportStartMonth = monthFormat.parse(s.getStartMonth().toString());
                         sportEndMonth = monthFormat.parse(s.getEndMonth().toString());
@@ -123,20 +116,23 @@ public class VacationService {
 
                         if((localStartMonth.isBefore(localStart) || localStartMonth.isEqual(localStart)) &&
                                 localEnd.isBefore(localEndMonth)) {
-                            sportsList.add(s);
+                            sportsList.add(s.getName());
                             vacationPrice += s.getPricePerDay() * daysBetweenDates;
                         }
                     }
                 }
+                if(!sportsList.isEmpty()){
+                    newVacation.setCity(c.getName());
+                    newVacation.setSports(sportsList);
+                    newVacation.setEstimatedCost(vacationPrice);
+                    vacationsList.add(newVacation);
+                }
             }
-
-            System.out.println(localStart.toString() + localEnd.toString() + "days to spend " + daysBetweenDates + ", total price = " + vacationPrice);
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return sportsList.toString();
+        return vacationsList;
     }
 }
 
